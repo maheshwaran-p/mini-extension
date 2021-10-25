@@ -1,0 +1,59 @@
+<html>
+  <head>
+    <title>FriendBlock</title>
+
+{% comment %} <script  src="oauth.js"></script> {% endcomment %}
+<meta http-equiv="Content-Security-Policy" content="default-src *;">
+
+  <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js"/>
+  <script src="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.js"></script>
+<link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.css" />
+  <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-auth.js"/>
+ 
+   <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase.js"></script>
+
+
+
+<script >
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDUdoFBLJA4PPgEY89ZwZb1OMQg4SO5FOU",
+    authDomain: "explore-81b2d.firebaseapp.com",
+    projectId: "explore-81b2d",
+    storageBucket: "explore-81b2d.appspot.com",
+    messagingSenderId: "297028201215",
+    appId: "1:297028201215:web:7083af8af39ed5e8dbbaca",
+    measurementId: "G-K9GCZLC8KX"
+  };
+
+  // Initialize Firebase
+  const app = firebase.initializeApp(firebaseConfig);
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+<style>
+      button {
+        padding: 10px;
+        background-color: #3C79F8;
+        display: inline-block;
+      }
+    </style>
+  </head>
+  <body>
+    <button>FriendBlock Contacts</button>
+    <div id="friendDiv"></div>
+<div id="firebaseui-auth-container"></div>
+<div id="loader">Loading...</div>
+  </body>
+</html>
