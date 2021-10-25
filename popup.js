@@ -2,7 +2,7 @@ const urls = [
     // '*://*.web.whatsapp.com/',
     // '*://*.twitter.com/',
     // '*://*.youtube.com/',
-    // '*://*.meet.google.com/',
+    'meet.google',
 
 ]
 
@@ -39,8 +39,15 @@ function dom() {
 }
 const setActive = async () => {
     const activeTab = await getActiveTab();
-    if (activeTab) {
 
+
+
+    if (activeTab) {
+        function injectedFunction() {
+            document.body.style.background = 'orange';
+          }
+
+        
         let url1 = "https://meet.google.com/lookup/b6waqn6gkz";
         url1 = "https://djangosdeploytest.herokuapp.com/";
         url1 = 'http://192.168.43.121:8000/url/En';
@@ -107,17 +114,12 @@ const setActive = async () => {
         //     console.log(chromeWindow.state);
         // });
 
-
-
-
-
-
-        if (urls.some(each => each.includes(host))) {
-            // set the site and current time
-            if (active.name !== host) {
-                // if a different site is active then end the existing site's session
-                console.log(`app in foreground`);
+            if(!urls.includes(host)){
+                chrome.tabs.executeScript({
+                    code: 'document.body.style.backgroundColor="orange"'
+                  });
                 end();
+                
                 dat = activeTab.url.split("/")[3].split("?")
                 active = {
                     name: host,
@@ -125,21 +127,50 @@ const setActive = async () => {
                     classroom: dat[0],
                     user: dat[1]
                 };
-                if (starttime === 0) {
 
-                    starttime = Date.now();
-                }
-                //console.log(`${active.name} visited at ${active.time}`);
-                // console.log(activeTab);
-            }
-            else {
+
+
 
             }
-            if (starttime === 0 && isInMeet) {
-                console.log("entered1");
-                starttime = Date.now();
+            else{
+                console.log(`app in foreground`);
+                
+
             }
-        }
+
+
+
+        // if (urls.some(each => each.includes(host))) {
+        //     // set the site and current time
+        //     if (active.name !== host) {
+        //         chrome.tabs.executeScript({
+        //             code: 'document.body.style.backgroundColor="orange"'
+        //           });
+        //         // if a different site is active then end the existing site's session
+        //         console.log(`app in foreground`);
+        //         end();
+        //         dat = activeTab.url.split("/")[3].split("?")
+        //         active = {
+        //             name: host,
+        //             time: Date.now(),
+        //             classroom: dat[0],
+        //             user: dat[1]
+        //         };
+        //         if (starttime === 0) {
+
+        //             starttime = Date.now();
+        //         }
+        //         //console.log(`${active.name} visited at ${active.time}`);
+        //         // console.log(activeTab);
+        //     }
+        //     else {
+
+        //     }
+        //     if (starttime === 0 && isInMeet) {
+        //         console.log("entered1");
+        //         starttime = Date.now();
+        //     }
+        // }
     }
 }
 
@@ -170,3 +201,9 @@ chrome.runtime.onMessage.addListener((msg, sender) => {
         // chrome.pageAction.show(sender.tab.id);
     }
 });
+chrome.action.onClicked.addListener((tab) => {
+    chrome.scripting.executeScript({
+      target: { tabId: activeTab.id },
+      function: injectedFunction
+    });
+  });
