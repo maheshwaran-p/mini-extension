@@ -14,7 +14,6 @@ document.querySelector('#s1')
 
 
 document.querySelector('#sign-in').addEventListener('click', function () {
-  chrome.extension.getBackgroundPage().console.log('sign-in event called...............');
   document.getElementById('sign-in').disabled = true;
   chrome.runtime.sendMessage({ message: 'login' }, function
     (response) {

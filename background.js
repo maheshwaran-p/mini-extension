@@ -78,7 +78,26 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                         fetch(url).then(function (response) {
                             return response.json();
                         }).then(function (data) {
+
+
                             console.log(data);
+
+
+                            if (!data.result) {
+                                console.log('Student................');
+                                chrome.browserAction.setPopup({ popup: './student-signout.html' }, () => {
+                                    sendResponse('success');
+                                });
+
+                            }
+                            else {
+
+                                console.log('Staff................');
+                                chrome.browserAction.setPopup({ popup: './staff-signout.html' }, () => {
+                                    sendResponse('success');
+                                });
+
+                            }
                         }).catch(function () {
 
                         });
@@ -96,9 +115,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                             chrome.storage.sync.set({ 'user_status': true, 'Email': email_id }, function () {
                                 console.log('User Records Stored  in Local Storage');
                             });
-                            chrome.browserAction.setPopup({ popup: './signout.html' }, () => {
-                                sendResponse('success');
-                            });
+                            // chrome.browserAction.setPopup({ popup: './signout.html' }, () => {
+                            //     sendResponse('success');
+                            // });
                         } else {
                             sendResponse('Invalid credentials.');
                             console.log("Invalid credentials.");
