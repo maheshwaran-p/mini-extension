@@ -51,7 +51,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.message === 'login') {
         chrome.storage.sync.get(['Email', 'user_status'], function (items) {
 
-            console.log(items['user_status'])
+            //  console.log(items['user_status'])
 
             if (items['user_status']) {
                 sendResponse('User is already signed in',);
@@ -74,7 +74,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                         const user_info = parseJwt(id_token);
 
 
-                        let url = 'https://f9f5-2401-4900-6059-3ed6-94e9-16db-103c-8199.ngrok.io/user/' + user_info.email;
+                        //let url = 'https://f9f5-2401-4900-6059-3ed6-94e9-16db-103c-8199.ngrok.io/user/' + user_info.email;
+                        let url = 'http://127.0.0.1:8000/user/' + user_info.email;
                         fetch(url).then(function (response) {
                             return response.json();
                         }).then(function (data) {
@@ -110,14 +111,18 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
                         if ((user_info.iss === 'https://accounts.google.com' || user_info.iss === 'accounts.google.com')
                             && user_info.aud === CLIENT_ID) {
+
+
                             console.log("User successfully signed in.");
+
+
+
+
 
                             chrome.storage.sync.set({ 'user_status': true, 'Email': email_id }, function () {
                                 console.log('User Records Stored  in Local Storage');
                             });
-                            // chrome.browserAction.setPopup({ popup: './signout.html' }, () => {
-                            //     sendResponse('success');
-                            // });
+
                         } else {
                             sendResponse('Invalid credentials.');
                             console.log("Invalid credentials.");
@@ -136,7 +141,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     else if (request.message === 'logout') {
         user_signed_in = false;
         chrome.storage.sync.set({ 'user_status': false, 'Email': '' }, function () {
-            console.log('User Records Stored  in Local Storage');
+            //   console.log('User Records Stored  in Local Storage');
         });
         chrome.browserAction.setPopup({ popup: '/signin.html' }, () => {
             sendResponse('success');
@@ -150,3 +155,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         sendResponse(is_user_signed_in());
     }
 });
+
+
+
+
+

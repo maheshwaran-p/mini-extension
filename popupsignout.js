@@ -4,7 +4,7 @@ document.querySelector('#s2')
         console.log('user status called.......................')
         chrome.runtime.sendMessage({ message: 'isUserSignedIn' },
             function (response) {
-                alert(response);
+                //  alert(response);
             });
     });
 
