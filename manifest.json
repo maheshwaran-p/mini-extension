@@ -3,7 +3,6 @@
   "name": "mini",
   "description": "Attendence for",
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnF7RGLAxIon0/XeNZ4MLdP3DMkoORzEAKVg0sb89JpA/W2osTHr91Wqwdc9lW0mFcSpCYS9Y3e7cUMFo/M2ETASIuZncMiUzX2/0rrWtGQ3UuEj3KSe5PdaVZfisyJw/FebvHwirEWrhqcgzVUj9fL9YjE0G45d1zMKcc1umKvLqPyTznNuKBZ9GJREdGLRJCBmUgCkI8iwtwC+QZTUppmaD50/ksnEUXv+QkgGN07/KoNA5oAgo49Jf1XBoMv4QXtVZQlBYZl84zAsI82hb63a6Gu29U/4qMWDdI7+3Ne5TRvo6Zi3EI4M2NQNplJhik105qrz+eTLJJxvf4slrWwIDAQAB",
-
   "version": "1.0.0",
   "icons": {
     "128": "icon_128.png"
@@ -13,24 +12,22 @@
     "tabs",
     "<all_urls>",
     "identity",
-    "scripting"
+    "scripting",
+    "storage"
   ],
   "browser_action": {
     "default_icon": "icon.png",
     "default_popup": "signin.html"
   },
-
   "background": {
-    "scripts": ["background.js"]
-      
-    
+    "scripts": [
+      "background.js"
+    ]
   },
   "sandbox": {
-    "pages": ["index.html"]
+    "pages": [
+      "index.html"
+    ]
   },
-  "content_security_policy": 
-    "script-src 'self' default-src https://apis.google.com https://www.gstatic.com https://www.googleapis.com https://securetoken.googleapis.com ; object-src 'self' "
-  
-      
+  "content_security_policy": "script-src 'self' default-src https://apis.google.com https://www.gstatic.com https://www.googleapis.com https://securetoken.googleapis.com ; object-src 'self' "
 }
-
