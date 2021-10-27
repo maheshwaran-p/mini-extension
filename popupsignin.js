@@ -18,7 +18,8 @@ document.querySelector('#sign-in').addEventListener('click', function () {
   chrome.runtime.sendMessage({ message: 'login' }, function
     (response) {
     chrome.extension.getBackgroundPage().console.log('response');
-    if (response === 'success') {
+    if (response.response === 'success') {
+      chrome.extension.getBackgroundPage().console.log(response.data);
       // document.getElementById('sign-in').innerHTML = 'Signout';
 
       // document.getElementById('sign-in').disabled = false;

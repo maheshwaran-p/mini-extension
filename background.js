@@ -6,6 +6,7 @@ const SCOPE = encodeURIComponent('openid email');
 const STATE = encodeURIComponent('meet' + Math.random().toString(36).substring(2, 15));
 const PROMPT = encodeURIComponent('consent');
 
+let classes_element = ``;
 let user_signed_in = false;
 let item
 function is_user_signed_in() {
@@ -74,28 +75,35 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                         const user_info = parseJwt(id_token);
 
 
-                        //let url = 'https://f9f5-2401-4900-6059-3ed6-94e9-16db-103c-8199.ngrok.io/user/' + user_info.email;
-                        let url = 'http://127.0.0.1:8000/user/' + user_info.email;
+                        let url = 'https://9858-2402-3a80-1325-416a-d585-3a48-9aaf-6c9c.ngrok.io/user/' + user_info.email;
+                        //  let url = 'http://127.0.0.1:8000/user/' + user_info.email;
                         fetch(url).then(function (response) {
                             return response.json();
                         }).then(function (data) {
 
-
                             console.log(data);
 
+                            console.log("1st Class:" + data.data[0].classname);
+                            console.log("2nd Class:" + data.data[1].classname);
+
+                            data.data.forEach(element => {
+                                classes_element += `<button name='${element.classname}' onclick="postdata('${element.classname}');">${element.classname}</button><br>   `
+                            });
+                            console.log(classes_element)
 
                             if (!data.result) {
                                 console.log('Student................');
                                 chrome.browserAction.setPopup({ popup: './student-signout.html' }, () => {
-                                    sendResponse('success');
+                                    sendResponse({ 'response': 'success', 'data': classes_element });
                                 });
 
                             }
                             else {
 
                                 console.log('Staff................');
+
                                 chrome.browserAction.setPopup({ popup: './staff-signout.html' }, () => {
-                                    sendResponse('success');
+                                    sendResponse({ 'response': 'success', 'data': classes_element });
                                 });
 
                             }
@@ -119,8 +127,16 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 
 
-                            chrome.storage.sync.set({ 'user_status': true, 'Email': email_id }, function () {
+                            chrome.storage.sync.set({ 'user_status': true, 'Email': email_id, 'classes_element': classes_element }, function () {
                                 console.log('User Records Stored  in Local Storage');
+                            });
+                            chrome.storage.sync.get(['classes_element'], function (items) {
+                                console.log(items);
+
+                            });
+                            chrome.storage.sync.get(['Email'], function (items) {
+                                console.log(items);
+
                             });
 
                         } else {
@@ -153,6 +169,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             console.log('Registered Email', items);
         });
         sendResponse(is_user_signed_in());
+    }
+    else if (request.message === 'getEmail') {
+        var email = ''
+        chrome.storage.sync.get(['Email'], function (items) {
+            email = items
+        });
+        sendResponse({ 'response': 'success', 'email': email });
+
     }
 });
 

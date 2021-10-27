@@ -24,7 +24,7 @@
             padding: 5px;
         }
 
-        #hide {
+        #start {
             color: #ca3c3c;
             text-align: center;
             padding: 5px;
@@ -59,15 +59,31 @@
 <body>
     <h2>Sign-OUt With Your Google Account to Use This Extension</h2>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <div id="classes"></div>
     <button id='s2'>User Status</button>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <button id='sign-out'>Sign Out</button>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <button id='hide'>Staff</button><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+    <br>
+    <br>
+
+    <button id='start' onclick="gettab()">Start</button><br>
 
     <br>
     <br>
     <br>
+    <script>
+        function gettab() {
+            chrome.tabs.query({}, function (tabs) {
+                tabs.forEach(function (tab) {
+
+
+                    console.log("onclick called.....");
+                    console.log(tab + "\n");
+                });
+            });
+        }
+    </script>
 
     <script src="popupsignout.js"></script>
 </body>
