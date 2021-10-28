@@ -9,6 +9,16 @@ document.querySelector('#s1')
       });
   });
 
+document.querySelector('#clear')
+  .addEventListener('click', function () {
+    console.log('clearing.......................')
+    chrome.storage.local.clear();
+    // chrome.runtime.sendMessage({ message: 'isUserSignedIn' },
+    //   function (response) {
+    //     // alert(response);
+    //   });
+  });
+
 
 
 

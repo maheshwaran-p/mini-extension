@@ -9,15 +9,16 @@ document.querySelector('#s2')
     });
 
 let datas = ''
-chrome.runtime.sendMessage({ message: 'getEmail' }, async function
-    (response) {
-    chrome.extension.getBackgroundPage().console.log('from get Email', response);
-    if (response.response === 'success') {
 
 
+async function setClasses() {
 
+    chrome.storage.local.get(['Email'], async function (items) {
+
+
+        console.log(items.Email)
         //  let url = 'https://9858-2402-3a80-1325-416a-d585-3a48-9aaf-6c9c.ngrok.io/user/mahe.1817130@gct.ac.in';
-        let url = 'http://127.0.0.1:8000/user/' + user_info.email;
+        let url = 'http://127.0.0.1:8000/user/' + items.Email;
         await fetch(url).then(function (response) {
             return response.json();
         }).then(function (data) {
@@ -35,15 +36,16 @@ chrome.runtime.sendMessage({ message: 'getEmail' }, async function
 
                 document.querySelector(`#${element.classname}`).addEventListener('click',
                     function () {
-                        postdata(`${element.classname}`)
+                        postdata(`${element.classname}`, items.Email)
                     })
             });
         });
-    }
-    else {
-        document.getElementById('sign-out').disabled = false;
-    }
-});
+    });
+
+}
+
+setClasses()
+
 
 
 
@@ -92,12 +94,12 @@ document.querySelector('#start').addEventListener('click', function () {
 
 
 
-function postdata(classname) {
+function postdata(classname, email) {
     console.log("Class Name............")
     //let url = 'https://9858-2402-3a80-1325-416a-d585-3a48-9aaf-6c9c.ngrok.io/seturl/';
-    let url = 'http://127.0.0.1:8000/user/' + user_info.email;
+    let url = 'http://127.0.0.1:8000/seturl/';
     let data = new Object();
-    data.email = 'mahe.1817130@gct.ac.in'
+    data.email = email
     data.classname = classname
     data.url = url
     fetch(url, {
