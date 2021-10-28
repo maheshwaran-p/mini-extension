@@ -11,7 +11,8 @@ document.querySelector('#s1')
 
 document.querySelector('#clear')
   .addEventListener('click', function () {
-    console.log('clearing.......................')
+    chrome.extension.getBackgroundPage().console.log('Local Storage Cleared.......');
+
     chrome.storage.local.clear();
     // chrome.runtime.sendMessage({ message: 'isUserSignedIn' },
     //   function (response) {

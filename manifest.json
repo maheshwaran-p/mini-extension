@@ -21,7 +21,8 @@
   },
   "background": {
     "scripts": [
-      "background.js"
+      "background.js",
+      "popup.js"
     ]
   },
   "sandbox": {

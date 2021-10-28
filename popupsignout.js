@@ -44,9 +44,9 @@ async function setClasses() {
 
 }
 
-setClasses()
 
 
+setClasses();
 
 
 
@@ -77,31 +77,56 @@ document.querySelector('#sign-out').addEventListener('click', function () {
 });
 
 
-document.querySelector('#start').addEventListener('click', function () {
-
-    chrome.tabs.query({}, function (tabs) {
-        tabs.forEach(function (tab) {
-            console.log("QuerySelector called.....");
-            console.log(tab + "\n");
-
-            // do whatever you want with the tab
 
 
-        });
-    });
 
-});
+
 
 
 
 function postdata(classname, email) {
+
+    document.querySelector('#start').addEventListener('click', function () {
+
+        let meet_url;
+        let meet_url_count = 0;
+        chrome.extension.getBackgroundPage().console.log('Start Clicked.......');
+        chrome.tabs.getAllInWindow(null, function (tabs) {
+            for (var i = 0; i < tabs.length; i++) {
+
+                let meetlink = "https://meet.google.com/";
+                if ((tabs[i].url).includes(meetlink)) {
+                    chrome.extension.getBackgroundPage().console.log('Meet Detected at :' + (i + 1) + 'th tab');
+                    meet_url = tabs[i].url;
+                    chrome.extension.getBackgroundPage().console.log("Meet URL :" + meet_url);
+                    setClasses(meet_url);
+                    meet_url_count++;
+                }
+                chrome.tabs.sendRequest(tabs[i].id, { action: "******" });
+                chrome.extension.getBackgroundPage().console.log('Tab:' + i + "  " + tabs[i].url);
+            }
+            if (meet_url_count == 0) {
+                chrome.extension.getBackgroundPage().console.log("Meet URL Not Detected");
+                alert("Meet URL Not Detected.Please Open Your Meet tab Before Start.");
+            }
+            else if (meet_url_count == 1)
+                chrome.extension.getBackgroundPage().console.log("Meet URL Detected");
+            else if (meet_url_count > 1) {
+                chrome.extension.getBackgroundPage().console.log("More Than one Meet Link Detected .Please Close the Unwanted Meet Links");
+                alert("More Than one Meet Link Detected .Please Close the Unwanted Meet Links");
+            }
+
+        });
+
+    });
     console.log("Class Name............")
     //let url = 'https://9858-2402-3a80-1325-416a-d585-3a48-9aaf-6c9c.ngrok.io/seturl/';
-    let url = 'http://127.0.0.1:8000/seturl/';
+    let url = 'http://127.0.0.1:8000/seturl/' + meet_url;
     let data = new Object();
     data.email = email
     data.classname = classname
     data.url = url
+
     fetch(url, {
         method: "POST",
         headers: {

@@ -82,8 +82,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
                             console.log(data);
 
-                            // console.log("1st Class:" + data.data[0].classname);
-                            // console.log("2nd Class:" + data.data[1].classname);
+
 
 
 

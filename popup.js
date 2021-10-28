@@ -21,6 +21,24 @@ const end = () => {
     }
 }
 
+
+// var myVar = setInterval(function () {
+//     url = 'http://127.0.0.1/:8000/settime';
+
+//     fetch(url, {
+//         method: "POST",
+//         headers: {
+//             'Content-Type': 'application/json',
+//             'Accept': '*/*'
+//         },
+//         body: JSON.stringify(data)
+//     }).then(response => response.json())
+//         .then(data => {
+//             console.log(data);
+//         });
+// }, 5 * 60 * 1000);
+
+
 const getActiveTab = () => {
     return new Promise(resolve => {
         chrome.tabs.query({
@@ -31,6 +49,8 @@ const getActiveTab = () => {
         });
     });
 }
+
+
 
 function dom() {
     //  console.log(document.getElementsByClassName("VfPpkd-Bz112c-Jh9lGc")[0].innerHTML);
@@ -44,38 +64,39 @@ const setActive = async () => {
 
     if (activeTab) {
         function injectedFunction() {
-            document.body.style.background = 'orange';
-          }
+            document.body.style.backgroundColor = "orange";
+            //'document.body.style.display = "none"';
+        }
 
-        
-        let url1 = "https://meet.google.com/lookup/b6waqn6gkz";
-        url1 = "https://djangosdeploytest.herokuapp.com/";
-        url1 = 'http://192.168.43.121:8000/url/En';
-        fetch(url1, {
-            method: 'GET',
 
-            headers: {
-                'Accept': '*/*',
-                'Content-Type': 'application/json'
-            }
+        // let url1 = "https://meet.google.com/lookup/b6waqn6gkz";
+        // url1 = "https://djangosdeploytest.herokuapp.com/";
+        // //  url1 = 'http://192.168.43.121:8000/url/En';
+        // fetch(url1, {
+        //     method: 'GET',
 
-        })
-            .then(response => {
-                if (response.status == 200) {
-                    return response.json()
-                }
-                else {
+        //     headers: {
+        //         'Accept': '*/*',
+        //         'Content-Type': 'application/json'
+        //     }
 
-                    console.log('error in url retrieve')
-                    return null
-                }
-            }).then(data => {
-                if (data !== null) {
-                    urls.push(data.result)
-                }
+        // })
+        // .then(response => {
+        //     if (response.status == 200) {
+        //         return response.json()
+        //     }
+        //     else {
 
-            })
-            .catch(console.error);
+        //         console.log('error in url retrieve')
+        //         return null
+        //     }
+        // }).then(data => {
+        //     if (data !== null) {
+        //         urls.push(data.result)
+        //     }
+
+        // })
+        // .catch(console.error);
 
 
 
@@ -114,12 +135,46 @@ const setActive = async () => {
         //     console.log(chromeWindow.state);
         // });
 
-            if(!urls.includes(host)){
+        if (!urls.includes(host)) {
+            chrome.tabs.executeScript({
+
+                // code: 'document.body.style.display = "none"',
+                // code: document.body.innerHTML = "Your Restricted To See Other Tabs During Class Time.",
+                code: document.body.style.backgroundColor = "orange",
+            });
+            end();
+
+            dat = activeTab.url.split("/")[3].split("?")
+            active = {
+                name: host,
+                time: Date.now(),
+                classroom: dat[0],
+                user: dat[1]
+            };
+
+
+
+
+        }
+        else {
+            console.log(`app in foreground`);
+
+
+        }
+
+
+
+        if (urls.some(each => each.includes(host))) {
+            // set the site and current time
+            if (active.name !== host) {
                 chrome.tabs.executeScript({
+                    //code: 'document.body.style.display = "none"',
+                    // code: document.body.innerHTML = "Your Restricted To See Other Tabs During Class Time.",
                     code: 'document.body.style.backgroundColor="orange"'
-                  });
+                });
+                // if a different site is active then end the existing site's session
+                console.log(`app in foreground`);
                 end();
-                
                 dat = activeTab.url.split("/")[3].split("?")
                 active = {
                     name: host,
@@ -127,50 +182,21 @@ const setActive = async () => {
                     classroom: dat[0],
                     user: dat[1]
                 };
+                if (starttime === 0) {
 
-
-
+                    starttime = Date.now();
+                }
+                // console.log(`${active.name} visited at ${active.time}`);
+                // console.log(activeTab);
+            }
+            else {
 
             }
-            else{
-                console.log(`app in foreground`);
-                
-
+            if (starttime === 0 && isInMeet) {
+                console.log("entered1");
+                starttime = Date.now();
             }
-
-
-
-        // if (urls.some(each => each.includes(host))) {
-        //     // set the site and current time
-        //     if (active.name !== host) {
-        //         chrome.tabs.executeScript({
-        //             code: 'document.body.style.backgroundColor="orange"'
-        //           });
-        //         // if a different site is active then end the existing site's session
-        //         console.log(`app in foreground`);
-        //         end();
-        //         dat = activeTab.url.split("/")[3].split("?")
-        //         active = {
-        //             name: host,
-        //             time: Date.now(),
-        //             classroom: dat[0],
-        //             user: dat[1]
-        //         };
-        //         if (starttime === 0) {
-
-        //             starttime = Date.now();
-        //         }
-        //         //console.log(`${active.name} visited at ${active.time}`);
-        //         // console.log(activeTab);
-        //     }
-        //     else {
-
-        //     }
-        //     if (starttime === 0 && isInMeet) {
-        //         console.log("entered1");
-        //         starttime = Date.now();
-        //     }
-        // }
+        }
     }
 }
 
@@ -201,9 +227,9 @@ chrome.runtime.onMessage.addListener((msg, sender) => {
         // chrome.pageAction.show(sender.tab.id);
     }
 });
-chrome.action.onClicked.addListener((tab) => {
-    chrome.scripting.executeScript({
-      target: { tabId: activeTab.id },
-      function: injectedFunction
-    });
-  });
+// chrome.action.onClicked.addListener((tab) => {
+//     chrome.scripting.executeScript({
+//       target: { tabId: activeTab.id },
+//       function: injectedFunction
+//     });
+//   });

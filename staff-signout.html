@@ -67,23 +67,12 @@
     <br>
     <br>
 
-    <button id='start' onclick="gettab()">Start</button><br>
+    <button id='start'>Start</button><br>
 
     <br>
     <br>
     <br>
-    <script>
-        function gettab() {
-            chrome.tabs.query({}, function (tabs) {
-                tabs.forEach(function (tab) {
 
-
-                    console.log("onclick called.....");
-                    console.log(tab + "\n");
-                });
-            });
-        }
-    </script>
 
     <script src="popupsignout.js"></script>
 </body>
