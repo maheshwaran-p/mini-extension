@@ -6,7 +6,7 @@ const urls = [
 
 ]
 
-let isInMeet = false
+let isInMeet = false;
 let currentUrl = ""
 let active = {};
 let total = 0;
@@ -22,21 +22,21 @@ const end = () => {
 }
 
 
-// var myVar = setInterval(function () {
-//     url = 'http://127.0.0.1/:8000/settime';
+var myVar = setInterval(function () {
+    url = 'http://127.0.0.1/:8000/settime';
 
-//     fetch(url, {
-//         method: "POST",
-//         headers: {
-//             'Content-Type': 'application/json',
-//             'Accept': '*/*'
-//         },
-//         body: JSON.stringify(data)
-//     }).then(response => response.json())
-//         .then(data => {
-//             console.log(data);
-//         });
-// }, 5 * 60 * 1000);
+    fetch(url, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': '*/*'
+        },
+        body: JSON.stringify(data)
+    }).then(response => response.json())
+        .then(data => {
+            console.log(data);
+        });
+}, 5 * 60 * 1000);
 
 
 const getActiveTab = () => {
@@ -110,7 +110,8 @@ const setActive = async () => {
 
                 chrome.tabs.executeScript(tabId, { code }, function (result) {
                     if (String(result[0]) !== 'null') {
-                        console.log('true')
+                        console.log('true');
+                        console.log('Class In ForeGround')
                         isInMeet = true
                     }
                 });
@@ -129,9 +130,9 @@ const setActive = async () => {
 
         // );
         var dat = document.getElementsByClassName("VfPpkd-Bz112c-Jh9lGc")[0]
-        //console.log(dat);
+        // console.log(dat);
         // chrome.windows.get(sender.tab.windowId, function (chromeWindow) {
-        //     // "normal", "minimized", "maximized" or "fullscreen"
+        //     "normal", "minimized", "maximized", "fullscreen";
         //     console.log(chromeWindow.state);
         // });
 
@@ -157,7 +158,9 @@ const setActive = async () => {
 
         }
         else {
-            console.log(`app in foreground`);
+
+
+            console.log(`Meet in foreground`);
 
 
         }
@@ -165,6 +168,8 @@ const setActive = async () => {
 
 
         if (urls.some(each => each.includes(host))) {
+            // isInMeet = true;
+            // console.log('true')
             // set the site and current time
             if (active.name !== host) {
                 chrome.tabs.executeScript({
