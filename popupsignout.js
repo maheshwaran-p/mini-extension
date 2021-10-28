@@ -16,8 +16,8 @@ chrome.runtime.sendMessage({ message: 'getEmail' }, async function
 
 
 
-        let url = 'https://9858-2402-3a80-1325-416a-d585-3a48-9aaf-6c9c.ngrok.io/user/mahe.1817130@gct.ac.in';
-        //  let url = 'http://127.0.0.1:8000/user/' + user_info.email;
+        //  let url = 'https://9858-2402-3a80-1325-416a-d585-3a48-9aaf-6c9c.ngrok.io/user/mahe.1817130@gct.ac.in';
+        let url = 'http://127.0.0.1:8000/user/' + user_info.email;
         await fetch(url).then(function (response) {
             return response.json();
         }).then(function (data) {
@@ -94,8 +94,8 @@ document.querySelector('#start').addEventListener('click', function () {
 
 function postdata(classname) {
     console.log("Class Name............")
-    let url = 'https://9858-2402-3a80-1325-416a-d585-3a48-9aaf-6c9c.ngrok.io/seturl/';
-    //  let url = 'http://127.0.0.1:8000/user/' + user_info.email;
+    //let url = 'https://9858-2402-3a80-1325-416a-d585-3a48-9aaf-6c9c.ngrok.io/seturl/';
+    let url = 'http://127.0.0.1:8000/user/' + user_info.email;
     let data = new Object();
     data.email = 'mahe.1817130@gct.ac.in'
     data.classname = classname

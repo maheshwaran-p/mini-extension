@@ -2,7 +2,7 @@
 const CLIENT_ID = encodeURIComponent('575384002811-v991bj9iovbalb307njkhpcba9a0t6st.apps.googleusercontent.com');
 const RESPONSE_TYPE = encodeURIComponent('id_token');
 const REDIRECT_URI = encodeURIComponent('https://ghbmnnjooekpmoecnnnilnnbdlolhkhi.chromiumapp.org/')
-const SCOPE = encodeURIComponent('openid email');
+const SCOPE = encodeURIComponent('openid email profile');
 const STATE = encodeURIComponent('meet' + Math.random().toString(36).substring(2, 15));
 const PROMPT = encodeURIComponent('consent');
 
@@ -75,8 +75,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                         const user_info = parseJwt(id_token);
 
 
-                        let url = 'https://9858-2402-3a80-1325-416a-d585-3a48-9aaf-6c9c.ngrok.io/user/' + user_info.email;
-                        //  let url = 'http://127.0.0.1:8000/user/' + user_info.email;
+                        //          let url = 'https://9858-2402-3a80-1325-416a-d585-3a48-9aaf-6c9c.ngrok.io/user/' + user_info.email;
+                        let url = 'http://127.0.0.1:8000/user/' + user_info.email;
                         fetch(url).then(function (response) {
                             return response.json();
                         }).then(function (data) {
@@ -86,10 +86,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                             console.log("1st Class:" + data.data[0].classname);
                             console.log("2nd Class:" + data.data[1].classname);
 
-                            data.data.forEach(element => {
-                                classes_element += `<button name='${element.classname}' onclick="postdata('${element.classname}');">${element.classname}</button><br>   `
-                            });
-                            console.log(classes_element)
+                            // data.data.forEach(element => {
+                            //     classes_element += `<button name='${element.classname}' onclick="postdata('${element.classname}');">${element.classname}</button><br>   `
+                            // });
+                            // console.log(classes_element)
 
                             if (!data.result) {
                                 console.log('Student................');
@@ -113,6 +113,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
                         console.log(user_info);
                         let email_id = user_info.email;
+                        console.log(user_info.name);
+                        console.log(user_info.given_name);
+                        console.log(user_info.family_name);
+
+
+
                         console.log(email_id);
 
                         //  const user_info = KJUR.jws.JWS.readSafeJSONString(b64utoutf8(id_token.split(".")[1]));
