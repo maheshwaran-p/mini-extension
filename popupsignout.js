@@ -1,4 +1,3 @@
-
 document.querySelector('#s2')
     .addEventListener('click', function () {
         console.log('user status called.......................')
@@ -9,7 +8,7 @@ document.querySelector('#s2')
     });
 
 let datas = ''
-
+BASE_URL = 'http://127.0.0.1:8000'
 
 async function setClasses() {
 
@@ -18,7 +17,7 @@ async function setClasses() {
 
         console.log(items.Email)
         //  let url = 'https://9858-2402-3a80-1325-416a-d585-3a48-9aaf-6c9c.ngrok.io/user/mahe.1817130@gct.ac.in';
-        let url = 'http://127.0.0.1:8000/user/' + items.Email;
+        let url = BASE_URL + '/user/' + items.Email;
         await fetch(url).then(function (response) {
             return response.json();
         }).then(function (data) {
@@ -109,8 +108,10 @@ function postdata(classname, email) {
                 chrome.extension.getBackgroundPage().console.log("Meet URL Not Detected");
                 alert("Meet URL Not Detected.Please Open Your Meet tab Before Start.");
             }
-            else if (meet_url_count == 1)
+            else if (meet_url_count == 1) {
                 chrome.extension.getBackgroundPage().console.log("Meet URL Detected");
+
+            }
             else if (meet_url_count > 1) {
                 chrome.extension.getBackgroundPage().console.log("More Than one Meet Link Detected .Please Close the Unwanted Meet Links");
                 alert("More Than one Meet Link Detected .Please Close the Unwanted Meet Links");
@@ -121,7 +122,7 @@ function postdata(classname, email) {
     });
     console.log("Class Name............")
     //let url = 'https://9858-2402-3a80-1325-416a-d585-3a48-9aaf-6c9c.ngrok.io/seturl/';
-    let url = 'http://127.0.0.1:8000/seturl/' + meet_url;
+    let url = BASE_URL + '/seturl/' + meet_url;
     let data = new Object();
     data.email = email
     data.classname = classname
@@ -138,4 +139,9 @@ function postdata(classname, email) {
         .then(data => {
             console.log(data);
         });
+
+
+    chrome.runtime.sendMessage({ message: "classname", classname: classname }, function (response) {
+        console.log("class name sent");
+    });
 }
