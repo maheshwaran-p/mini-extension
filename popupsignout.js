@@ -8,8 +8,9 @@ document.querySelector('#s2')
     });
 
 let datas = ''
-BASE_URL = 'http://127.0.0.1:8000'
-
+//BASE_URL = 'http://127.0.0.1:8000'
+BASE_URL = 'http://172.31.7.103:8000'
+BASE_URL = 'http://mini.newsled.in'
 async function setClasses() {
 
     chrome.storage.local.get(['Email'], async function (items) {
@@ -118,30 +119,31 @@ function postdata(classname, email) {
             }
 
         });
+        console.log("Class Name............")
+        //let url = 'https://9858-2402-3a80-1325-416a-d585-3a48-9aaf-6c9c.ngrok.io/seturl/';
+        let url = BASE_URL + '/seturl/' + meet_url;
+        let data = new Object();
+        data.email = email
+        data.classname = classname
+        data.url = url
 
-    });
-    console.log("Class Name............")
-    //let url = 'https://9858-2402-3a80-1325-416a-d585-3a48-9aaf-6c9c.ngrok.io/seturl/';
-    let url = BASE_URL + '/seturl/' + meet_url;
-    let data = new Object();
-    data.email = email
-    data.classname = classname
-    data.url = url
+        fetch(url, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': '*/*'
+            },
+            body: JSON.stringify(data)
+        }).then(response => response.json())
+            .then(data => {
+                console.log(data);
+            });
 
-    fetch(url, {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': '*/*'
-        },
-        body: JSON.stringify(data)
-    }).then(response => response.json())
-        .then(data => {
-            console.log(data);
+
+        chrome.runtime.sendMessage({ message: "classname", classname: classname }, function (response) {
+            console.log("class name sent");
         });
 
-
-    chrome.runtime.sendMessage({ message: "classname", classname: classname }, function (response) {
-        console.log("class name sent");
     });
+
 }

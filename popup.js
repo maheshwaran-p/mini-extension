@@ -5,9 +5,9 @@ const urls = [
     'meet.google',
 
 ]
-BASE_URL = 'http://127.0.0.1:8000'
-
-
+//BASE_URL = 'http://127.0.0.1:8000'
+//BASE_URL = 'http://172.31.7.103:8000'
+BASE_URL = 'http://mini.newsled.in'
 
 
 
@@ -21,6 +21,7 @@ let currentUrl = ""
 let active = {};
 let total = 0;
 let starttime = 0;
+
 const end = () => {
     if (active.name) {
         // console.log(`app in background`);
@@ -32,7 +33,16 @@ const end = () => {
 }
 
 
-
+const getActiveTab = () => {
+    return new Promise(resolve => {
+        chrome.tabs.query({
+            active: true,
+            currentWindow: true
+        }, activeTab => {
+            resolve(activeTab[0]);
+        });
+    });
+}
 
 
 
@@ -221,43 +231,39 @@ chrome.runtime.onMessage.addListener((msg, sender) => {
     if ((msg.message === 'classname')) {
         console.log(msg.classname);
 
+        var newURL = "http://127.0.0.1:8000/camera";
+        chrome.tabs.create({ url: newURL });
 
-        var myVar = setInterval(async function () {
+        setInterval(async function () {
             url = BASE_URL + '/settime';
+            const data = new Object()
+            await chrome.storage.local.get(['Email'], function (items) {
 
-            chrome.storage.local.get(['Email'], function (items) {
-                data = new Object()
                 data.time = total
                 data.email = items.Email
                 data.classname = msg.classname
 
             });
+            console.log(data)
 
-            fetch(url, {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': '*/*'
-                },
-                body: JSON.stringify(data)
-            }).then(response => response.json())
-                .then(data => {
-                    console.log("set Interval")
-                    console.log(data.total);
-                });
+            // await fetch(url, {
+            //     method: "POST",
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //         'Accept': '*/*'
+            //     },
+            //     body: JSON.stringify(data)
+            // }).then(response => response.json())
+            //     .then(data => {
+            //         console.log("set Interval")
+            //         console.log(data.total);
+            //     });
+
         }, 5000);
 
 
-        const getActiveTab = () => {
-            return new Promise(resolve => {
-                chrome.tabs.query({
-                    active: true,
-                    currentWindow: true
-                }, activeTab => {
-                    resolve(activeTab[0]);
-                });
-            });
-        }
+
+
 
 
         // chrome.pageAction.show(sender.tab.id);
