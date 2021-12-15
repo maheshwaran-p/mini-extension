@@ -11,13 +11,28 @@ let currentUrl = ""
 let active = {};
 let total = 0;
 let starttime = 0;
+
+var acc;
+
+chrome.storage.local.get(['profile'], function (items) {
+    acc = items.profile;
+
+
+});
+
 const end = () => {
     if (active.name) {
+
+
+        console.log('Profile:' + acc)
         // console.log(`app in background`);
-        const timeDiff = parseInt((Date.now() - active.time) / 1000);
-        total += timeDiff;
-        console.log(`You listened ${total} seconds out of ${parseInt((Date.now() - starttime) / 1000)}`);
-        active = {};
+        if (acc === 'student') {
+            const timeDiff = parseInt((Date.now() - active.time) / 1000);
+            total += timeDiff;
+            console.log(`You listened ${total} seconds out of ${parseInt((Date.now() - starttime) / 1000)}`);
+            active = {};
+
+        }
     }
 }
 

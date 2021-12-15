@@ -75,7 +75,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 
                         //          let url = 'https://9858-2402-3a80-1325-416a-d585-3a48-9aaf-6c9c.ngrok.io/user/' + user_info.email;
-                        let url = 'http://127.0.0.1:8000/user/' + user_info.email;
+                        // let url = 'http://127.0.0.1:8000/user/' + user_info.email;
+                        let url = 'http://mini.newsled.in/user/' + user_info.email;
                         fetch(url).then(response =>
                             response.json()
                         ).then(function (data) {
@@ -86,21 +87,36 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 
 
-                            if (!data.result) {
+                            if (!data.result && data.status === 200) {
                                 console.log('Student................');
                                 chrome.browserAction.setPopup({ popup: './student-signout.html' }, () => {
                                     sendResponse('success');
                                 });
 
+
+                                chrome.storage.local.set({ 'profile': 'student', }, function () {
+
+                                });
+
                             }
-                            else {
+                            else if (data.result && data.status === 200) {
 
                                 console.log('Staff................');
+
 
                                 chrome.browserAction.setPopup({ popup: './staff-signout.html' }, () => {
 
                                 });
+
                                 sendResponse('success');
+
+                                chrome.storage.local.set({ 'profile': 'staff', }, function () {
+
+                                });
+
+                            }
+                            else if (data.status === 404) {
+                                console.log('Create An Account On Website First................');
 
                             }
                         }).catch(function () {
@@ -155,7 +171,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     else if (request.message === 'logout') {
         user_signed_in = false;
         chrome.storage.local.set({ 'user_status': false, 'Email': '' }, function () {
-            //   console.log('User Records Stored  in Local Storage');
+
         });
         chrome.browserAction.setPopup({ popup: '/signin.html' }, () => {
             sendResponse('success');
@@ -164,7 +180,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         return true;
     } else if (request.message === 'isUserSignedIn') {
         chrome.storage.local.get(['Email'], function (items) {
-            console.log('Registered Email', items);
+            console.log('Registered Email:', items);
         });
         sendResponse(is_user_signed_in());
     }
