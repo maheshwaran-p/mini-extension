@@ -90,10 +90,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
                             if (!data.result && data.status === 200) {
                                 console.log('Student................');
-                                chrome.browserAction.setPopup({ popup: './student-signout.html' }, () => {
-                                    sendResponse('success');
-                                });
-
+                                // chrome.browserAction.setPopup({ popup: './student-signout.html' }, () => {
+                                   
+                                // });
+                                sendResponse('success');
 
                                 chrome.storage.local.set({ 'profile': 'student', }, function () {
 
@@ -105,9 +105,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                                 console.log('Staff................');
 
 
-                                chrome.browserAction.setPopup({ popup: './staff-signout.html' }, () => {
+                                // chrome.browserAction.setPopup({ popup: './staff-signout.html' }, () => {
 
-                                });
+                                // });
 
                                 sendResponse('success');
 

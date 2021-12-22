@@ -24,10 +24,10 @@ let starttime = 0;
 
 var acc;
 
-chrome.storage.local.get(['profile'], function (items) {
-    acc = items.profile;
-
-
+chrome.storage.local.get(['user_status'], function (items) {
+    if (items.user_status){
+        acc = "staff";
+    }
 });
 
 

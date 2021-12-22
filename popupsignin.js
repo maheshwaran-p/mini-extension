@@ -1,13 +1,13 @@
 
 chrome.storage.local.get(['Email', 'user_status'], function (items) {
 
-  console.log(items.Email)
+
   let render = ``, status = 'Student';
   if (items.user_status) {
     status = 'Staff'
   }
 
-  if (items.Email === null || items.Email.trim() === '') {
+  if (items.Email === null || items.Email === '' || items.Email === undefined) {
     render = `
       <h2>Sign-In</h2>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -41,13 +41,12 @@ chrome.storage.local.get(['Email', 'user_status'], function (items) {
       <br>
       <br>
       `;
-
-  }
+}
   document.getElementById('render').innerHTML = render
   document.getElementById('status').innerHTML = status
 
 
-  if (items.Email === null || items.Email.trim() === '') {
+  if (items.Email === null || items.Email === '' || items.Email === undefined) {
     document.querySelector('#s1')
       .addEventListener('click', function () {
         console.log('user status called.......................')
@@ -97,9 +96,12 @@ chrome.storage.local.get(['Email', 'user_status'], function (items) {
     document.querySelector('#s2')
       .addEventListener('click', function () {
         console.log('user status called.......................')
+        var newURL = "http://stackoverflow.com/";
+        newURL =  chrome.extension.getURL('faceapi/index.html')
+        chrome.tabs.create({ url: newURL });
         chrome.runtime.sendMessage({ message: 'isUserSignedIn' },
           function (response) {
-            //  alert(response);
+            
           });
       });
 
