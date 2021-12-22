@@ -20,6 +20,53 @@ chrome.storage.local.get(['profile'], function (items) {
 
 });
 
+
+function display() {
+
+    chrome.tabs.getAllInWindow(null, function (tabs) {
+        for (var i = 0; i < tabs.length; i++) {
+
+            let meetlink = "https://meet.google.com/";
+            if ((tabs[i].url).includes(meetlink)) {
+
+                chrome.tabs.executeScript({
+                    code: 'document.body.style.display = "none"',
+                    // code: document.body.innerHTML = "Your Restricted To See Other Tabs During Class Time.",
+                    // code: 'document.body.style.backgroundColor="orange"'
+                });
+
+
+                meet_url = tabs[i].url;
+
+                setClasses(meet_url);
+                meet_url_count++;
+            }
+            chrome.tabs.sendRequest(tabs[i].id, { action: "******" });
+
+        }
+
+
+
+    });
+
+
+}
+
+
+var intervalId = window.setInterval(function () {
+    /// call your function 
+
+
+
+
+
+    if (acc === 'student') {
+        console.log('I will come for every 10 seconds. ');
+        display();
+    }
+}, 10000);
+
+
 const end = () => {
     if (active.name) {
 

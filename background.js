@@ -75,8 +75,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 
                         //          let url = 'https://9858-2402-3a80-1325-416a-d585-3a48-9aaf-6c9c.ngrok.io/user/' + user_info.email;
-                        // let url = 'http://127.0.0.1:8000/user/' + user_info.email;
-                        let url = 'http://mini.newsled.in/user/' + user_info.email;
+                        let url = 'http://127.0.0.1:8000/user/' + user_info.email;
+                        // let url = 'http://mini.newsled.in/user/' + user_info.email;
                         fetch(url).then(response =>
                             response.json()
                         ).then(function (data) {
