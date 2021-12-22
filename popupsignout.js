@@ -8,9 +8,11 @@ document.querySelector('#s2')
     });
 
 let datas = ''
+
 //BASE_URL = 'http://127.0.0.1:8000'
-BASE_URL = 'http://172.31.7.103:8000'
-BASE_URL = 'http://mini.newsled.in'
+BASE_URL = 'http://192.168.43.105:8000'
+//BASE_URL = 'http://172.31.7.103:8000'
+//BASE_URL = 'http://mini.newsled.in'
 async function setClasses() {
 
     chrome.storage.local.get(['Email'], async function (items) {
@@ -18,7 +20,9 @@ async function setClasses() {
 
         console.log(items.Email)
         //  let url = 'https://9858-2402-3a80-1325-416a-d585-3a48-9aaf-6c9c.ngrok.io/user/mahe.1817130@gct.ac.in';
-        let url = 'http://127.0.0.1:8000/user/' + items.Email;
+        //let url = 'http://127.0.0.1:8000/user/' + items.Email;
+        let url = BASE_URL + '/user/' + items.Email;
+
         //let url = 'http://mini.newsled.in/user/' + items.Email;
         await fetch(url).then(function (response) {
             return response.json();
@@ -144,7 +148,7 @@ function postdata(classname, email) {
     });
     console.log("Class Name............")
     //let url = 'https://9858-2402-3a80-1325-416a-d585-3a48-9aaf-6c9c.ngrok.io/seturl/';
-    let url = 'http://127.0.0.1:8000/seturl/' + meet_url;
+    let url = BASE_URL + '/seturl/' + meet_url;
     // let url = 'http://mini.newsled.in/seturl/' + meet_url;
     let data = new Object();
     data.email = email

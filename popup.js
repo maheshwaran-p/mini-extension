@@ -293,7 +293,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     if ((msg.message === 'time')) {
         facetime += msg.time
         // chrome.extension.getBackgroundPage().console.log(time,facetime)
-        console.log("Screen time: " + total + " Face Time: " + facetime)
+        console.log("Screen time: " + total + ", Face Time: " + facetime)
     }
 
 
