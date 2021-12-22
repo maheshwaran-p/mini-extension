@@ -20,6 +20,7 @@ let isInMeet = false;
 let currentUrl = ""
 let active = {};
 let total = 0;
+let facetime = 0;
 let starttime = 0;
 
 var acc;
@@ -287,13 +288,20 @@ chrome.windows.onFocusChanged.addListener(window => {
         setActive();
     }
 });
-chrome.runtime.onMessage.addListener((msg, sender) => {
-    // First, validate the message's structure.
+chrome.runtime.onMessage.addListener((msg, sender , sendResponse) => {
+
+    if((msg.message === 'time')){
+        facetime += msg.time
+       // chrome.extension.getBackgroundPage().console.log(time,facetime)
+        console.log("sdcdsc sdcs scdsc",total,facetime)
+    }
+
+
+
     if ((msg.message === 'classname')) {
         console.log(msg.classname);
 
-        var newURL = "http://127.0.0.1:8000/camera";
-        chrome.tabs.create({ url: newURL });
+       
 
         setInterval(async function () {
             url = BASE_URL + '/settime';

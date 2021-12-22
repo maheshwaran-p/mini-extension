@@ -43,9 +43,6 @@ function startVideo() {
     // }, 100)
 
 
-
-
-
     // navigator.getMedia(
     //     { video: {} },
     //     stream => video.srcObject = stream,
@@ -75,6 +72,16 @@ video.addEventListener('playing', () => {
 
     }, 500)
 })
+
+
+setInterval(async ()=>{ sendTime()  },10000)
+
+
+async function sendTime(){
+    chrome.runtime.sendMessage({message : 'time' ,time : time/2000 },function (response){
+        chrome.extension.getBackgroundPage().console.log(' time posted ');
+    })
+}
 
 
 

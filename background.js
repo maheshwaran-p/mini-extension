@@ -49,6 +49,8 @@ function parseJwt(token) {
 
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+
+
     if (request.message === 'login') {
         chrome.storage.local.get(['Email', 'user_status'], function (items) {
 

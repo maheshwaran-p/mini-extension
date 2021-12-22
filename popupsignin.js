@@ -98,7 +98,7 @@ chrome.storage.local.get(['Email', 'user_status'], function (items) {
         console.log('user status called.......................')
         var newURL = "http://stackoverflow.com/";
         newURL =  chrome.extension.getURL('faceapi/index.html')
-        chrome.tabs.create({ url: newURL });
+        chrome.windows.create({ url: newURL , type : 'panel'});
         chrome.runtime.sendMessage({ message: 'isUserSignedIn' },
           function (response) {
             
