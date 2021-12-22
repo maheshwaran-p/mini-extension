@@ -1,4 +1,3 @@
-
 document.querySelector('#s2')
     .addEventListener('click', function () {
         console.log('user status called.......................')
@@ -9,8 +8,9 @@ document.querySelector('#s2')
     });
 
 let datas = ''
-
-
+//BASE_URL = 'http://127.0.0.1:8000'
+BASE_URL = 'http://172.31.7.103:8000'
+BASE_URL = 'http://mini.newsled.in'
 async function setClasses() {
 
     chrome.storage.local.get(['Email'], async function (items) {
@@ -111,14 +111,35 @@ function postdata(classname, email) {
                 chrome.extension.getBackgroundPage().console.log("Meet URL Not Detected");
                 alert("Meet URL Not Detected.Please Open Your Meet tab Before Start.");
             }
-            else if (meet_url_count == 1)
+            else if (meet_url_count == 1) {
                 chrome.extension.getBackgroundPage().console.log("Meet URL Detected");
+
+            }
             else if (meet_url_count > 1) {
                 chrome.extension.getBackgroundPage().console.log("More Than one Meet Link Detected .Please Close the Unwanted Meet Links");
                 alert("More Than one Meet Link Detected .Please Close the Unwanted Meet Links");
             }
 
         });
+        console.log("Class Name............")
+        //let url = 'https://9858-2402-3a80-1325-416a-d585-3a48-9aaf-6c9c.ngrok.io/seturl/';
+        let url = BASE_URL + '/seturl/' + meet_url;
+        let data = new Object();
+        data.email = email
+        data.classname = classname
+        data.url = url
+
+        fetch(url, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': '*/*'
+            },
+            body: JSON.stringify(data)
+        }).then(response => response.json())
+            .then(data => {
+                console.log(data);
+            });
 
     });
     console.log("Class Name............")
@@ -141,4 +162,7 @@ function postdata(classname, email) {
         .then(data => {
             console.log(data);
         });
+
+
+
 }

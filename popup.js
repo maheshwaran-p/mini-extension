@@ -5,8 +5,18 @@ const urls = [
     'meet.google',
 
 ]
+//BASE_URL = 'http://127.0.0.1:8000'
+//BASE_URL = 'http://172.31.7.103:8000'
+BASE_URL = 'http://mini.newsled.in'
 
-let isInMeet = false
+
+
+
+
+
+
+
+let isInMeet = false;
 let currentUrl = ""
 let active = {};
 let total = 0;
@@ -84,23 +94,6 @@ const end = () => {
 }
 
 
-// var myVar = setInterval(function () {
-//     url = 'http://127.0.0.1/:8000/settime';
-
-//     fetch(url, {
-//         method: "POST",
-//         headers: {
-//             'Content-Type': 'application/json',
-//             'Accept': '*/*'
-//         },
-//         body: JSON.stringify(data)
-//     }).then(response => response.json())
-//         .then(data => {
-//             console.log(data);
-//         });
-// }, 5 * 60 * 1000);
-
-
 const getActiveTab = () => {
     return new Promise(resolve => {
         chrome.tabs.query({
@@ -172,8 +165,16 @@ const setActive = async () => {
 
                 chrome.tabs.executeScript(tabId, { code }, function (result) {
                     if (String(result[0]) !== 'null') {
-                        console.log('true')
-                        isInMeet = true
+                        console.log('true');
+                        document.getElementsByClassName
+                        console.log('Class In ForeGround')
+                        isInMeet = true;
+
+
+
+
+
+
                     }
                 });
             }
@@ -191,9 +192,9 @@ const setActive = async () => {
 
         // );
         var dat = document.getElementsByClassName("VfPpkd-Bz112c-Jh9lGc")[0]
-        //console.log(dat);
+        // console.log(dat);
         // chrome.windows.get(sender.tab.windowId, function (chromeWindow) {
-        //     // "normal", "minimized", "maximized" or "fullscreen"
+        //     "normal", "minimized", "maximized", "fullscreen";
         //     console.log(chromeWindow.state);
         // });
 
@@ -219,7 +220,9 @@ const setActive = async () => {
 
         }
         else {
-            console.log(`app in foreground`);
+
+
+            console.log(`Meet in foreground`);
 
 
         }
@@ -227,6 +230,8 @@ const setActive = async () => {
 
 
         if (urls.some(each => each.includes(host))) {
+            // isInMeet = true;
+            // console.log('true')
             // set the site and current time
             if (active.name !== host) {
                 chrome.tabs.executeScript({
@@ -284,11 +289,49 @@ chrome.windows.onFocusChanged.addListener(window => {
 });
 chrome.runtime.onMessage.addListener((msg, sender) => {
     // First, validate the message's structure.
-    if ((msg.from === 'content') && (msg.subject === 'showPageAction')) {
-        console.log(sender.tab.id);
+    if ((msg.message === 'classname')) {
+        console.log(msg.classname);
+
+        var newURL = "http://127.0.0.1:8000/camera";
+        chrome.tabs.create({ url: newURL });
+
+        setInterval(async function () {
+            url = BASE_URL + '/settime';
+            const data = new Object()
+            await chrome.storage.local.get(['Email'], function (items) {
+
+                data.time = total
+                data.email = items.Email
+                data.classname = msg.classname
+
+            });
+            console.log(data)
+
+            // await fetch(url, {
+            //     method: "POST",
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //         'Accept': '*/*'
+            //     },
+            //     body: JSON.stringify(data)
+            // }).then(response => response.json())
+            //     .then(data => {
+            //         console.log("set Interval")
+            //         console.log(data.total);
+            //     });
+
+        }, 5000);
+
+
+
+
+
+
         // chrome.pageAction.show(sender.tab.id);
     }
 });
+
+
 // chrome.action.onClicked.addListener((tab) => {
 //     chrome.scripting.executeScript({
 //       target: { tabId: activeTab.id },
