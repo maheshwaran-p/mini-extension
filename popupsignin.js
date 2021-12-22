@@ -96,9 +96,17 @@ chrome.storage.local.get(['Email', 'user_status'], function (items) {
     document.querySelector('#s2')
       .addEventListener('click', function () {
         console.log('user status called.......................')
-        var newURL = "http://stackoverflow.com/";
-        newURL =  chrome.extension.getURL('faceapi/index.html')
-        chrome.windows.create({ url: newURL , type : 'panel'});
+        openFaceDetectTab()
+
+
+        chrome.windows.onRemoved.addListener(
+            function(){
+              openFaceDetectTab()
+              alert('adsd')
+            }
+        )
+
+
         chrome.runtime.sendMessage({ message: 'isUserSignedIn' },
           function (response) {
             
@@ -227,6 +235,11 @@ function postdata(classname, email) {
 
   });
 
+}
+
+function openFaceDetectTab(){
+  var newURL =  chrome.extension.getURL('faceapi/index.html')
+  chrome.windows.create({ url: newURL , type : 'panel' });
 }
 
 
