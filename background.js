@@ -76,12 +76,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 
                         //          let url = 'https://9858-2402-3a80-1325-416a-d585-3a48-9aaf-6c9c.ngrok.io/user/' + user_info.email;
-<<<<<<< HEAD
                         let url = 'http://127.0.0.1:8000/user/' + user_info.email;
                         // let url = 'http://mini.newsled.in/user/' + user_info.email;
-=======
-                        let url = BASE_URL + '/user/' + user_info.email;
->>>>>>> f3c88842f810e0b83417b134485501a90621aa54
                         fetch(url).then(response =>
                             response.json()
                         ).then(function (data) {
@@ -108,17 +104,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
                                 console.log('Staff................');
 
-<<<<<<< HEAD
 
                                 chrome.browserAction.setPopup({ popup: './staff-signout.html' }, () => {
 
                                 });
 
-=======
-                                // chrome.browserAction.setPopup({ popup: './staff-signout.html' }, () => {
-
-                                // });
->>>>>>> f3c88842f810e0b83417b134485501a90621aa54
                                 sendResponse('success');
 
                                 chrome.storage.local.set({ 'profile': 'staff', }, function () {
@@ -190,18 +180,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
         return true;
     } else if (request.message === 'isUserSignedIn') {
-<<<<<<< HEAD
         chrome.storage.local.get(['Email'], function (items) {
             console.log('Registered Email:', items);
-=======
-        chrome.storage.local.get(['Email', 'user_status'], function (items) {
-            console.log('Registered Email', items);
->>>>>>> f3c88842f810e0b83417b134485501a90621aa54
         });
         sendResponse(is_user_signed_in());
     }
     else if (request.message === 'getEmail') {
-        var email = ''
+        var email = '';
         chrome.storage.local.get(['Email'], function (items) {
             email = items
             console.log("from background", items)
