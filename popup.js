@@ -7,7 +7,7 @@ const urls = [
 ]
 //BASE_URL = 'http://127.0.0.1:8000'
 //BASE_URL = 'http://172.31.7.103:8000'
-BASE_URL = 'http://mini.newsled.in'
+//BASE_URL = 'http://mini.newsled.in'
 
 
 
@@ -26,63 +26,63 @@ let starttime = 0;
 var acc;
 
 chrome.storage.local.get(['user_status'], function (items) {
-    if (items.user_status){
+    if (items.user_status) {
         acc = "staff";
     }
 });
 
 
-function display() {
+// function display() {
 
-    chrome.tabs.getAllInWindow(null, function (tabs) {
-        for (var i = 0; i < tabs.length; i++) {
+//     chrome.tabs.getAllInWindow(null, function (tabs) {
+//         for (var i = 0; i < tabs.length; i++) {
 
-            let meetlink = "https://meet.google.com/";
-            if ((tabs[i].url).includes(meetlink)) {
+//             let meetlink = "https://meet.google.com/";
+//             if ((tabs[i].url).includes(meetlink)) {
 
-                chrome.tabs.executeScript({
-                    code: 'document.body.style.display = "none"',
-                    // code: document.body.innerHTML = "Your Restricted To See Other Tabs During Class Time.",
-                    // code: 'document.body.style.backgroundColor="orange"'
-                });
-
-
-                meet_url = tabs[i].url;
-
-                setClasses(meet_url);
-                meet_url_count++;
-            }
-            chrome.tabs.sendRequest(tabs[i].id, { action: "******" });
-
-        }
+//                 chrome.tabs.executeScript({
+//                     code: 'document.body.style.display = "none"',
+//                     // code: document.body.innerHTML = "Your Restricted To See Other Tabs During Class Time.",
+//                     // code: 'document.body.style.backgroundColor="orange"'
+//                 });
 
 
+//                 meet_url = tabs[i].url;
 
-    });
+//                 setClasses(meet_url);
+//                 meet_url_count++;
+//             }
+//             chrome.tabs.sendRequest(tabs[i].id, { action: "******" });
 
-
-}
-
-
-var intervalId = window.setInterval(function () {
-    /// call your function 
+//         }
 
 
 
+//     });
 
 
-    if (acc === 'student') {
-        console.log('I will come for every 10 seconds. ');
-        display();
-    }
-}, 10000);
+// }
+
+
+// var intervalId = window.setInterval(function () {
+//     /// call your function 
+
+
+
+
+
+//     if (acc === 'student') {
+//         console.log('I will come for every 10 seconds. ');
+//         displa();
+//     }
+// }, 10000);
 
 
 const end = () => {
     if (active.name) {
 
 
-        console.log('Profile:' + acc)
+        //console.log('Profile:' + acc)
         // console.log(`app in background`);
         if (acc === 'student') {
             const timeDiff = parseInt((Date.now() - active.time) / 1000);
@@ -288,12 +288,12 @@ chrome.windows.onFocusChanged.addListener(window => {
         setActive();
     }
 });
-chrome.runtime.onMessage.addListener((msg, sender , sendResponse) => {
+chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
-    if((msg.message === 'time')){
+    if ((msg.message === 'time')) {
         facetime += msg.time
-       // chrome.extension.getBackgroundPage().console.log(time,facetime)
-        console.log("sdcdsc sdcs scdsc",total,facetime)
+        // chrome.extension.getBackgroundPage().console.log(time,facetime)
+        console.log("Screen time: " + total + " Face Time: " + facetime)
     }
 
 
@@ -301,7 +301,7 @@ chrome.runtime.onMessage.addListener((msg, sender , sendResponse) => {
     if ((msg.message === 'classname')) {
         console.log(msg.classname);
 
-       
+
 
         setInterval(async function () {
             url = BASE_URL + '/settime';
