@@ -1,4 +1,14 @@
 
+let acc = '';
+chrome.storage.local.get(['profile'], function (items) {
+
+  acc = items.profile;
+  if (items.profile === undefined)
+    acc = '';
+
+})
+
+
 chrome.storage.local.get(['Email', 'user_status'], function (items) {
 
 
@@ -10,11 +20,15 @@ chrome.storage.local.get(['Email', 'user_status'], function (items) {
   if (items.Email === null || items.Email === '' || items.Email === undefined) {
     render = `
       <h2>Sign-In</h2>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       <button id='sign-in'>Sign In</button>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       <button id='s1'>User Status</button>
-      <button id='clear'>clear local storage</button>
+      <br>
+      <br>
+      <div style="padding-left:40px">
+      <button id='clear' >clear local storage</button>
+      </div>
       <br>
       <br>
       <br>
@@ -43,7 +57,7 @@ chrome.storage.local.get(['Email', 'user_status'], function (items) {
       `;
   }
   document.getElementById('render').innerHTML = render
-  document.getElementById('status').innerHTML = status
+  document.getElementById('status').innerHTML = acc + " Profile"
 
 
   if (items.Email === null || items.Email === '' || items.Email === undefined) {
@@ -51,6 +65,7 @@ chrome.storage.local.get(['Email', 'user_status'], function (items) {
       .addEventListener('click', function () {
 
         console.log('user status called.......................')
+
         chrome.runtime.sendMessage({ message: 'isUserSignedIn' },
           function (response) {
             // alert(response);
@@ -96,6 +111,7 @@ chrome.storage.local.get(['Email', 'user_status'], function (items) {
     setClasses();
     document.querySelector('#s2')
       .addEventListener('click', function () {
+
 
         console.log('user status called.......................')
         var newURL = "http://stackoverflow.com/";
