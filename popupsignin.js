@@ -150,12 +150,14 @@ chrome.storage.local.get(['Email', 'user_status'], function (items) {
 
 async function setClasses() {
 
-  chrome.storage.local.get(['Email'], async function (items) {
+  chrome.storage.local.get(['Email','user_status'], async function (items) {
 
 
-    console.log(items.Email)
-    //  let url = 'https://9858-2402-3a80-1325-416a-d585-3a48-9aaf-6c9c.ngrok.io/user/mahe.1817130@gct.ac.in';
+    console.log(items.Email,items.user_status)
+
     let url = BASE_URL + '/user/' + items.Email;
+
+
     await fetch(url).then(function (response) {
       return response.json();
     }).then(function (data) {
@@ -173,7 +175,10 @@ async function setClasses() {
 
         document.querySelector(`#${element.classname}`).addEventListener('click',
           function () {
+            if(items.user_status)
             postdata(`${element.classname}`, items.Email)
+            else
+            getMeetUrl(`${element.classname}`)
           })
       });
     });
@@ -181,6 +186,32 @@ async function setClasses() {
 
 }
 
+async function getMeetUrl(classname){
+
+  document.querySelector('#start').addEventListener('click', async function () {
+
+  let url = BASE_URL + '/url/'+classname
+  await fetch(url, {
+    method: "GET",
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': '*/*'
+    },
+
+  }).then(async response =>{
+    if(response.status === 200)
+    { let data = await response.json()
+    chrome.tabs.create(  {url : data.result} )
+    }
+    else{
+      alert('class not started')
+    }
+
+  });
+})
+  
+
+}
 
 
 function postdata(classname, email) {
@@ -198,7 +229,7 @@ function postdata(classname, email) {
           chrome.extension.getBackgroundPage().console.log('Meet Detected at :' + (i + 1) + 'th tab');
           meet_url = tabs[i].url;
           chrome.extension.getBackgroundPage().console.log("Meet URL :" + meet_url);
-          setClasses(meet_url);
+          setMeetUrl(classname,email,meet_url);
           meet_url_count++;
         }
         chrome.tabs.sendRequest(tabs[i].id, { action: "******" });
@@ -218,33 +249,37 @@ function postdata(classname, email) {
       }
 
     });
-    console.log("Class Name............")
-    //let url = 'https://9858-2402-3a80-1325-416a-d585-3a48-9aaf-6c9c.ngrok.io/seturl/';
-    let url = BASE_URL + '/seturl/' + meet_url;
-    let data = new Object();
-    data.email = email
-    data.classname = classname
-    data.url = url
 
-    // fetch(url, {
-    //   method: "POST",
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //     'Accept': '*/*'
-    //   },
-    //   body: JSON.stringify(data)
-    // }).then(response => response.json())
-    //   .then(data => {
-    //     console.log(data);
-    //   });
+    
 
+
+    
+
+  });
+
+}
+async function setMeetUrl(classname,email,meet_url){
+  let url = BASE_URL + '/seturl'
+  let data = new Object();
+  data.email = email
+  data.classname = classname
+  data.url = meet_url
+  chrome.extension.getBackgroundPage().console.log(data);
+  await fetch(url, {
+    method: "POST",
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': '*/*'
+    },
+    body: JSON.stringify(data)
+  }).then(response => response.json())
+    .then(data => {
+      console.log(data);
+    });
 
     chrome.runtime.sendMessage({ message: "classname", classname: classname }, function (response) {
       console.log("class name sent");
     });
-
-  });
-
 }
 
 

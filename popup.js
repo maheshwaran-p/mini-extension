@@ -29,7 +29,10 @@ chrome.storage.local.get(['user_status'], function (items) {
     if (items.user_status) {
         acc = "staff";
     }
+    else
+        acc = "student";
 });
+
 
 
 // function display() {
@@ -200,12 +203,14 @@ const setActive = async () => {
         // });
 
         if (!urls.includes(host)) {
-            chrome.tabs.executeScript({
+            if (acc === "student") {
+                chrome.tabs.executeScript({
+                    code: 'document.body.style.display = "none"',
+                    // code: document.body.innerHTML = "Your Restricted To See Other Tabs During Class Time.",
+                    //code: 'document.body.style.backgroundColor="orange"'
+                });
+            }
 
-                // code: 'document.body.style.display = "none"',
-                // code: document.body.innerHTML = "Your Restricted To See Other Tabs During Class Time.",
-                code: document.body.style.backgroundColor = "orange",
-            });
             end();
 
             dat = activeTab.url.split("/")[3].split("?")
@@ -235,11 +240,13 @@ const setActive = async () => {
             // console.log('true')
             // set the site and current time
             if (active.name !== host) {
-                chrome.tabs.executeScript({
-                    //code: 'document.body.style.display = "none"',
-                    // code: document.body.innerHTML = "Your Restricted To See Other Tabs During Class Time.",
-                    code: 'document.body.style.backgroundColor="orange"'
-                });
+                // if (acc === "staff") {
+                //     chrome.tabs.executeScript({
+                //         code: 'document.body.style.display = "none"',
+                //         // code: document.body.innerHTML = "Your Restricted To See Other Tabs During Class Time.",
+                //         //code: 'document.body.style.backgroundColor="orange"'
+                //     });
+                // }
                 // if a different site is active then end the existing site's session
                 console.log(`app in foreground`);
                 end();

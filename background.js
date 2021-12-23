@@ -66,8 +66,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     'interactive': true
                 }, function (redirect_url) {
 
-
-                    // sendResponse('success')
                     if (chrome.runtime.lastError) {
                         sendResponse('Invalid credentials.');
 
@@ -77,86 +75,15 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                         const user_info = parseJwt(id_token);
 
 
-                        let url = BASE_URL + '/user/' + user_info.email;
-
-                        fetch(url).then(response =>
-                            response.json()
-                        ).then(function (data) {
-
-                            console.log(data);
-
-
-
-
-
-                            if (!data.result && data.status === 200) {
-                                console.log('Student................');
-                                // chrome.browserAction.setPopup({ popup: './student-signout.html' }, () => {
-
-                                // });
-                                sendResponse('success');
-
-                                chrome.storage.local.set({ 'profile': 'Student', }, function () {
-
-                                });
-
-                            }
-                            else if (data.result && data.status === 200) {
-
-                                console.log('Staff................');
-
-
-                                // chrome.browserAction.setPopup({ popup: './staff-signout.html' }, () => {
-
-                                // });
-
-                                sendResponse('success');
-
-                                chrome.storage.local.set({ 'profile': 'Staff', }, function () {
-
-                                });
-
-                            }
-                            else if (data.status === 404) {
-                                console.log('Create An Account On Website First................');
-
-                            }
-                        }).catch(function () {
-
-                            console.log("catch.................")
-
-                        });
-
-                        console.log(user_info);
-                        let email_id = user_info.email;
-                        console.log(user_info.name);
-                        console.log(user_info.given_name);
-                        console.log(user_info.family_name);
-
-
-
-                        console.log(email_id);
-
-                        //  const user_info = KJUR.jws.JWS.readSafeJSONString(b64utoutf8(id_token.split(".")[1]));
 
                         if ((user_info.iss === 'https://accounts.google.com' || user_info.iss === 'accounts.google.com')
                             && user_info.aud === CLIENT_ID) {
 
-
                             console.log("User successfully signed in.");
-
-
-
-
-
-                            chrome.storage.local.set({ 'user_status': true, 'Email': email_id }, function () {
-                                console.log('User Records Stored  in Local Storage');
-
-                            });
-
-
+                            setUserDetailsInLocalStorage(user_info)
 
                         } else {
+
                             sendResponse('Invalid credentials.');
                             console.log("Invalid credentials.");
                         }
@@ -198,6 +125,69 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
 
 });
+
+
+function setUserDetailsInLocalStorage(user_info) {
+
+    let url = BASE_URL + '/user/' + user_info.email;
+    // let url = 'http://mini.newsled.in/user/' + user_info.email;
+    fetch(url).then(response => response.json())
+        .then(function (data) {
+
+            if (!data.result && data.status === 200) {
+                console.log('Student................');
+                // chrome.browserAction.setPopup({ popup: './student-signout.html' }, () => {
+
+                // });
+
+
+                chrome.storage.local.set({ 'profile': 'student', }, function () {
+
+                });
+                console.log(user_info);
+                let email_id = user_info.email;
+                chrome.storage.local.set({ 'user_status': data.result, 'Email': email_id }, function () {
+                    console.log('User Records Stored  in Local Storage');
+                    sendResponse('success');
+                });
+
+            }
+            else if (data.result && data.status === 200) {
+
+                console.log('Staff................');
+
+
+                // chrome.browserAction.setPopup({ popup: './staff-signout.html' }, () => {
+
+                // });
+
+
+
+                chrome.storage.local.set({ 'profile': 'staff', }, function () {
+
+                });
+                console.log(user_info);
+                let email_id = user_info.email;
+                chrome.storage.local.set({ 'user_status': data.result, 'Email': email_id }, function () {
+                    console.log('User Records Stored  in Local Storage');
+                    sendResponse('success');
+                });
+
+            }
+            else if (data.status === 404) {
+                console.log('Create An Account On Website First................');
+
+
+            }
+
+        }).catch(function () {
+
+            console.log("catch.................")
+
+        });
+
+
+}
 
 
 
