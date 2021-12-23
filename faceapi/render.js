@@ -74,7 +74,7 @@ video.addEventListener('playing', () => {
 })
 
 
-setInterval(async ()=>{ sendTime()  },10000)
+setInterval(async ()=>{ sendTime();  },10000)
 
 
 async function sendTime(){

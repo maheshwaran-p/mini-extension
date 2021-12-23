@@ -2,27 +2,24 @@ const urls = [
     // '*://*.web.whatsapp.com/',
     // '*://*.twitter.com/',
     // '*://*.youtube.com/',
-    'meet.google',
+    // 'meet.google',
 
 ]
 //BASE_URL = 'http://127.0.0.1:8000'
 //BASE_URL = 'http://172.31.7.103:8000'
 //BASE_URL = 'http://mini.newsled.in'
-
-
-
-
-
-
-
+BASE_URL = 'http://192.168.43.105:8000'
 
 let isInMeet = false;
 let currentUrl = ""
 let active = {};
 let total = 0;
+let oldtime = 0;
+let oldfacetime = 0;
 let facetime = 0;
 let starttime = 0;
-
+let setTimeInterval;
+let GMeetTabId;
 var acc;
 
 chrome.storage.local.get(['user_status'], function (items) {
@@ -84,13 +81,13 @@ const end = () => {
 
         //console.log('Profile:' + acc)
         // console.log(`app in background`);
-        if (acc === 'student') {
+
             const timeDiff = parseInt((Date.now() - active.time) / 1000);
             total += timeDiff;
             console.log(`You listened ${total} seconds out of ${parseInt((Date.now() - starttime) / 1000)}`);
             active = {};
 
-        }
+        
     }
 }
 
@@ -158,52 +155,43 @@ const setActive = async () => {
 
 
         const { url } = activeTab;
+
         chrome.tabs.query(
             { active: true, windowId: chrome.windows.WINDOW_ID_CURRENT },
             function (tabs) {
-                const { id: tabId } = tabs[0].url;
+               // const { id : tabId } = tabs[0].url;
+                const tabId = tabs[0].id;
+              
                 let code = `document.getElementById('tt-c6').innerText`;
 
-                chrome.tabs.executeScript(tabId, { code }, function (result) {
+                if(urls.includes(url.split('?')[0])){
+                   
+
+                chrome.tabs.executeScript( tabId, { code }, function (result) {
                     if (String(result[0]) !== 'null') {
-                        console.log('true');
-                        document.getElementsByClassName
-                        console.log('Class In ForeGround')
+                        console.log('Inside Class')
                         isInMeet = true;
-
-
-
-
-
-
+                        GMeetTabId = tabId;   
                     }
                 });
+
+                if (starttime === 0 && isInMeet) {
+                    console.log("entered1");
+                    starttime = Date.now();
+                }
+            }
+            
+
             }
         );
         // check if the tab's url is among the arrays of url
         let host = new URL(url).hostname;
         host = host.replace('www.', '').replace('.com', '');
-
-        // activeTab.executeScript({
-        //     code: '(' + dom + ')();'
-        // }
-        //     , (result) => {
-        //         console.log(result);
-        //     }
-
-        // );
         var dat = document.getElementsByClassName("VfPpkd-Bz112c-Jh9lGc")[0]
-        // console.log(dat);
-        // chrome.windows.get(sender.tab.windowId, function (chromeWindow) {
-        //     "normal", "minimized", "maximized", "fullscreen";
-        //     console.log(chromeWindow.state);
-        // });
 
-        if (!urls.includes(host)) {
+
+        if (!urls.includes(url.split('?')[0]) && starttime !== 0) {
             chrome.tabs.executeScript({
-
-                // code: 'document.body.style.display = "none"',
-                // code: document.body.innerHTML = "Your Restricted To See Other Tabs During Class Time.",
                 code: document.body.style.backgroundColor = "orange",
             });
             end();
@@ -214,36 +202,32 @@ const setActive = async () => {
                 time: Date.now(),
                 classroom: dat[0],
                 user: dat[1]
-            };
-
-
-
-
-        }
+                };
+}
         else {
 
 
-            console.log(`Meet in foreground`);
+            //console.log('Back to Class');
 
 
         }
 
 
 
-        if (urls.some(each => each.includes(host))) {
+        if (urls.includes(url.split('?')[0])) {
             // isInMeet = true;
             // console.log('true')
             // set the site and current time
             if (active.name !== host) {
                 chrome.tabs.executeScript({
-                    //code: 'document.body.style.display = "none"',
-                    // code: document.body.innerHTML = "Your Restricted To See Other Tabs During Class Time.",
+
                     code: 'document.body.style.backgroundColor="orange"'
                 });
                 // if a different site is active then end the existing site's session
                 console.log(`app in foreground`);
                 end();
                 dat = activeTab.url.split("/")[3].split("?")
+                urls.push(dat)
                 active = {
                     name: host,
                     time: Date.now(),
@@ -279,6 +263,7 @@ chrome.tabs.onActivated.addListener(() => {
     // check to see if the active tab is among the sites being tracked
     setActive();
 });
+chrome.tabs
 
 chrome.windows.onFocusChanged.addListener(window => {
     if (window === -1) {
@@ -288,12 +273,34 @@ chrome.windows.onFocusChanged.addListener(window => {
         setActive();
     }
 });
+
+chrome.tabs.onRemoved.addListener((tabid,removeInfo) => {
+
+        if(tabid === GMeetTabId){
+           clearInterval(setTimeInterval)
+           GMeetTabId = null
+           starttime = 0
+
+
+        }
+
+});
+
+
+
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
     if ((msg.message === 'time')) {
+        if(isInMeet)
         facetime += msg.time
         // chrome.extension.getBackgroundPage().console.log(time,facetime)
         console.log("Screen time: " + total + ", Face Time: " + facetime)
+    }
+
+    if ((msg.message === 'meeturl')) {
+        var partsofUrl = msg.url.split('?')
+         urls.push(partsofUrl[0])
+        console.log("Url set in urls",msg.url)
     }
 
 
@@ -301,34 +308,64 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     if ((msg.message === 'classname')) {
         console.log(msg.classname);
 
+       
+      
 
 
-        setInterval(async function () {
+        setTimeInterval  = setInterval(async function () {
+
+            var newfacetime = facetime - oldfacetime
+
+            if(facetime >= 0){
+                oldfacetime = facetime
+            }
+
+
+            var newtime = 0
+            const timeDiff = parseInt((Date.now() - active.time) / 1000);
+            total += timeDiff;
+    
+            if (total !== NaN && total > 0){
+             newtime = total - oldtime
+            oldtime = total
+            }
+            if(newtime < 0){
+                newtime = 0
+            }
+
+            var realtime = newtime
+            if(newtime < newfacetime ){
+                realtime = newfacetime
+            }
+
+
             url = BASE_URL + '/settime';
             const data = new Object()
-            await chrome.storage.local.get(['Email'], function (items) {
+             chrome.storage.local.get(['Email'], function (items) {
 
-                data.time = total
+                data.time = realtime
                 data.email = items.Email
                 data.classname = msg.classname
+                data.pk = msg.id
+                console.log("time Listened",data.time,newfacetime)
+                fetch(url, {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': '*/*'
+                    },
+                    body: JSON.stringify(data)
+                }).then(response => response.json())
+                    .then(data => {
+                        console.log("sent to server")
+                        total = 0
+                    });
 
             });
-            console.log(data)
 
-            // await fetch(url, {
-            //     method: "POST",
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //         'Accept': '*/*'
-            //     },
-            //     body: JSON.stringify(data)
-            // }).then(response => response.json())
-            //     .then(data => {
-            //         console.log("set Interval")
-            //         console.log(data.total);
-            //     });
+        
 
-        }, 5000);
+        }, 10000);
 
 
 
@@ -338,6 +375,21 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         // chrome.pageAction.show(sender.tab.id);
     }
 });
+
+
+chrome.windows.onRemoved.addListener((tabid) => {
+
+    if(GMeetTabId !== null){
+    var newURL = chrome.extension.getURL('faceapi/index.html')
+    chrome.windows.create({ url: newURL , type : 'panel' });
+
+      chrome.runtime.sendMessage({ message: "classname", classname: classname , id : data.id }, function (response) {
+      console.log("class name sent");
+      });
+
+    }
+});
+
 
 
 // chrome.action.onClicked.addListener((tab) => {

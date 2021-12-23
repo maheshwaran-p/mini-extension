@@ -10,7 +10,7 @@ document.querySelector('#s2')
 let datas = ''
 
 //BASE_URL = 'http://127.0.0.1:8000'
-BASE_URL = 'http://192.168.43.105:8000'
+BASE_URL = 'http://192.168.43.213:8000'
 //BASE_URL = 'http://172.31.7.103:8000'
 //BASE_URL = 'http://mini.newsled.in'
 async function setClasses() {
