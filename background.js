@@ -13,9 +13,22 @@ function is_user_signed_in() {
     return user_signed_in;
 }
 
-let BASE_URL = 'http://192.168.43.105:8000'
+let b_url = 'http://gges.in/url.json';
+let BASE_URL;
+fetch(b_url).then(response => response.json())
+    .then(function (data) {
+        BASE_URL = data.url;
+    }).catch(function () {
+        chrome.extension.getBackgroundPage().console.log('Catch occured for BaseUrl');
+    });
+
+
+
+
+//let BASE_URL = 'http://192.168.43.105:8000'
 //let BASE_URL = 'http://172.31.7.103:8000'
 //let BASE_URL = 'http://127.0.0.1:8000'
+
 //BASE_URL = 'http://mini.newsled.in'
 //eyJhbGciOiJSUzI1NiIsImtpZCI6ImJiZDJhYzdjNGM1ZWI4YWRjOGVlZmZiYzhmNWEyZGQ2Y2Y3NTQ1ZTQiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiI1NzUzODQwMDI4MTEtdjk5MWJqOWlvdmJhbGIzMDduamtocGNiYTlhMHQ2c3QuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiI1NzUzODQwMDI4MTEtdjk5MWJqOWlvdmJhbGIzMDduamtocGNiYTlhMHQ2c3QuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMTczNDQxMjE4ODY3NjIxOTA5MDgiLCJoZCI6ImdjdC5hYy5pbiIsImVtYWlsIjoibWFoZS4xODE3MTMwQGdjdC5hYy5pbiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJub25jZSI6InRsYzhhcmc0ZGUyMXE4cjJ0Y2JsNiIsImlhdCI6MTYzNTE4NjU2MCwiZXhwIjoxNjM1MTkwMTYwLCJqdGkiOiI5NmVkNWRhNTAxYWRkNjU2ZDYzZDgxZjAwYzZhYTZhOTJlN2ZkOWUzIn0.A_Chan3qDy82rhHlYuSIHuAJEDrOya-2tdghPp66Ywey0fwYaHef0GJXHdqzr1qarVFI0DHI5OFAd_e2JENpX8-g4syjFj9U0XmMiJOLpdirb3_1VWf8rPhgnpP1TN8SOAh4j_W7tLug3JW_4nbnA9qx4hF49l4N_gFX-1B-Y-dutUuk9VqAScVeDzALFJDtPwvP4QnKgZazt8EgUkLthBxXPIj7oHOBKDSOckGQOTPwOowXw0yZdWfweN36EMBp8p_2Y8VwzBJv19mQ1uAT8JhxOqhebXVHVRp3OnNQTNdwSNHabMoMalCpC6klNhx8UpAOR5Wmtmth7ZQ9hrLwDQ
 function create_auth_endpoint() {

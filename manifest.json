@@ -12,9 +12,7 @@
     "tabs",
     "<all_urls>",
     "identity",
-    "scripting",
     "storage",
-    "videoCapture",
     "lockWindowFullscreenPrivate"
   ],
   "browser_action": {

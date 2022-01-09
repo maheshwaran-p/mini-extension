@@ -29,6 +29,9 @@ chrome.storage.local.get(['Email', 'user_status'], function (items) {
       <div style="padding-left:40px">
       <button id='clear' >clear local storage</button>
       </div>
+      <div style="padding-left:40px">
+      <button id='ready' >Ready</button>
+      </div>
       <br>
       <br>
       <br>
@@ -83,6 +86,28 @@ chrome.storage.local.get(['Email', 'user_status'], function (items) {
         //   });
       });
 
+    function ready() {
+
+
+      let url = 'http://gges.in/url.json';
+
+      chrome.extension.getBackgroundPage().console.log('url clicked1');
+      // let url = 'http://mini.newsled.in/user/' + user_info.email;
+      fetch(url).then(response => response.json())
+        .then(function (data) {
+          chrome.extension.getBackgroundPage().console.log('url clicked2');
+
+          chrome.extension.getBackgroundPage().console.log('data:' + data.url)
+        }).catch(function () {
+          console.log("catch for ready.................")
+        });
+    }
+
+    document.querySelector('#ready')
+      .addEventListener('click', function () {
+        ready();
+
+      });
 
 
 
@@ -150,10 +175,10 @@ chrome.storage.local.get(['Email', 'user_status'], function (items) {
 
 async function setClasses() {
 
-  chrome.storage.local.get(['Email','user_status'], async function (items) {
+  chrome.storage.local.get(['Email', 'user_status'], async function (items) {
 
 
-    console.log(items.Email,items.user_status)
+    console.log(items.Email, items.user_status)
 
     let url = BASE_URL + '/user/' + items.Email;
 
@@ -175,10 +200,10 @@ async function setClasses() {
 
         document.querySelector(`#${element.classname}`).addEventListener('click',
           function () {
-            if(items.user_status)
-            postdata(`${element.classname}`, items.Email)
+            if (items.user_status)
+              postdata(`${element.classname}`, items.Email)
             else
-            getMeetUrl(`${element.classname}`)
+              getMeetUrl(`${element.classname}`)
           })
       });
     });
@@ -186,30 +211,30 @@ async function setClasses() {
 
 }
 
-async function getMeetUrl(classname){
+async function getMeetUrl(classname) {
 
   document.querySelector('#start').addEventListener('click', async function () {
 
-  let url = BASE_URL + '/url/'+classname
-  await fetch(url, {
-    method: "GET",
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': '*/*'
-    },
+    let url = BASE_URL + '/url/' + classname
+    await fetch(url, {
+      method: "GET",
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': '*/*'
+      },
 
-  }).then(async response =>{
-    if(response.status === 200)
-    { let data = await response.json()
-    chrome.tabs.create(  {url : data.result} )
-    }
-    else{
-      alert('class not started')
-    }
+    }).then(async response => {
+      if (response.status === 200) {
+        let data = await response.json()
+        chrome.tabs.create({ url: data.result })
+      }
+      else {
+        alert('class not started')
+      }
 
-  });
-})
-  
+    });
+  })
+
 
 }
 
@@ -229,7 +254,7 @@ function postdata(classname, email) {
           chrome.extension.getBackgroundPage().console.log('Meet Detected at :' + (i + 1) + 'th tab');
           meet_url = tabs[i].url;
           chrome.extension.getBackgroundPage().console.log("Meet URL :" + meet_url);
-          setMeetUrl(classname,email,meet_url);
+          setMeetUrl(classname, email, meet_url);
           meet_url_count++;
         }
         chrome.tabs.sendRequest(tabs[i].id, { action: "******" });
@@ -250,15 +275,15 @@ function postdata(classname, email) {
 
     });
 
-    
 
 
-    
+
+
 
   });
 
 }
-async function setMeetUrl(classname,email,meet_url){
+async function setMeetUrl(classname, email, meet_url) {
   let url = BASE_URL + '/seturl'
   let data = new Object();
   data.email = email
@@ -277,9 +302,9 @@ async function setMeetUrl(classname,email,meet_url){
       console.log(data);
     });
 
-    chrome.runtime.sendMessage({ message: "classname", classname: classname }, function (response) {
-      console.log("class name sent");
-    });
+  chrome.runtime.sendMessage({ message: "classname", classname: classname }, function (response) {
+    console.log("class name sent");
+  });
 }
 
 

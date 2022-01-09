@@ -90,7 +90,7 @@ const end = () => {
         if (acc === 'student') {
             const timeDiff = parseInt((Date.now() - active.time) / 1000);
             total += timeDiff;
-            console.log(`You listened ${total} seconds out of ${parseInt((Date.now() - starttime) / 1000)}`);
+            // console.log(`You listened ${total} seconds out of ${parseInt((Date.now() - starttime) / 1000)}`);
             active = {};
 
         }
@@ -205,7 +205,7 @@ const setActive = async () => {
         if (!urls.includes(host)) {
             if (acc === "student") {
                 chrome.tabs.executeScript({
-                    code: 'document.body.style.display = "none"',
+                    //code: 'document.body.style.display = "none"',
                     // code: document.body.innerHTML = "Your Restricted To See Other Tabs During Class Time.",
                     //code: 'document.body.style.backgroundColor="orange"'
                 });
