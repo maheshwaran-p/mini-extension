@@ -13,7 +13,7 @@ function is_user_signed_in() {
     return user_signed_in;
 }
 
-let b_url = 'http://gges.in/url.json';
+let b_url = 'https://maheshwaran-p.github.io/mini-extension/url.json';
 let BASE_URL;
 fetch(b_url).then(response => response.json())
     .then(function (data) {

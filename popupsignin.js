@@ -29,13 +29,12 @@ chrome.storage.local.get(['Email', 'user_status'], function (items) {
       <div style="padding-left:40px">
       <button id='clear' >clear local storage</button>
       </div>
-      <div style="padding-left:40px">
-      <button id='ready' >Ready</button>
-      </div>
+     
       <br>
       <br>
       <br>
       <br>`;
+
 
   }
 
@@ -85,28 +84,8 @@ chrome.storage.local.get(['Email', 'user_status'], function (items) {
         //   });
       });
 
-    function ready() {
 
 
-      let url = 'http://gges.in/url.json';
-
-      chrome.extension.getBackgroundPage().console.log('url clicked1');
-      // let url = 'http://mini.newsled.in/user/' + user_info.email;
-      fetch(url).then(response => response.json())
-        .then(function (data) {
-          chrome.extension.getBackgroundPage().console.log('url clicked2');
-
-          chrome.extension.getBackgroundPage().console.log('data:' + data.url)
-        }).catch(function () {
-          console.log("catch for ready.................")
-        });
-    }
-
-    document.querySelector('#ready')
-      .addEventListener('click', function () {
-        ready();
-
-      });
 
 
 
@@ -231,31 +210,7 @@ async function getMeetUrl(classname) {
         alert('class not started')
       }
 
-    }).then(async response => {
-      if (response.status === 200) {
-        let data = await response.json()
-        chrome.tabs.create({ url: data.result })
-
-
-        var newURL = chrome.extension.getURL('faceapi/index.html')
-        chrome.windows.create({ url: newURL, type: 'panel' });
-
-        chrome.runtime.sendMessage({ message: "meeturl", url: data.result }, function (response) {
-          console.log("class name sent");
-        })
-
-        chrome.runtime.sendMessage({ message: "classname", classname: classname, id: data.id }, function (response) {
-          console.log("class name sent");
-
-        });
-
-      }
-      else {
-        alert('class not started')
-      }
-
     });
-
   })
 
 
@@ -325,9 +280,9 @@ async function setMeetUrl(classname, email, meet_url) {
       console.log(data);
     });
 
-  // chrome.runtime.sendMessage({ message: "classname", classname: classname  }, function (response) {
-  //   console.log("class name sent");
-  // });
+  chrome.runtime.sendMessage({ message: "classname", classname: classname }, function (response) {
+    console.log("class name sent");
+  });
 }
 
 
