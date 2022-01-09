@@ -37,7 +37,6 @@ chrome.storage.local.get(['Email', 'user_status'], function (items) {
       <br>
       <br>`;
 
-
   }
 
   else {
@@ -232,7 +231,31 @@ async function getMeetUrl(classname) {
         alert('class not started')
       }
 
+    }).then(async response => {
+      if (response.status === 200) {
+        let data = await response.json()
+        chrome.tabs.create({ url: data.result })
+
+
+        var newURL = chrome.extension.getURL('faceapi/index.html')
+        chrome.windows.create({ url: newURL, type: 'panel' });
+
+        chrome.runtime.sendMessage({ message: "meeturl", url: data.result }, function (response) {
+          console.log("class name sent");
+        })
+
+        chrome.runtime.sendMessage({ message: "classname", classname: classname, id: data.id }, function (response) {
+          console.log("class name sent");
+
+        });
+
+      }
+      else {
+        alert('class not started')
+      }
+
     });
+
   })
 
 
@@ -302,9 +325,9 @@ async function setMeetUrl(classname, email, meet_url) {
       console.log(data);
     });
 
-  chrome.runtime.sendMessage({ message: "classname", classname: classname }, function (response) {
-    console.log("class name sent");
-  });
+  // chrome.runtime.sendMessage({ message: "classname", classname: classname  }, function (response) {
+  //   console.log("class name sent");
+  // });
 }
 
 

@@ -12,6 +12,10 @@ let datas = ''
 
 
 //BASE_URL = 'http://127.0.0.1:8000'
+<<<<<<< HEAD
+=======
+BASE_URL = 'http://192.168.43.213:8000'
+>>>>>>> 79412c37eae7ec14f7d349b6d99e5b048f438f38
 //BASE_URL = 'http://172.31.7.103:8000'
 //BASE_URL = 'http://mini.newsled.in'
 async function setClasses() {
